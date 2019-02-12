@@ -78,6 +78,7 @@
     <Compile Include="Classes\clsSQLColumn.vb" />
     <Compile Include="Classes\clsSQLServer.vb" />
     <Compile Include="Classes\clsSQLTable.vb" />
+    <Compile Include="Classes\clsUser.vb" />
     <Compile Include="Modules\DatabaseFunctions.vb" />
     <Compile Include="Form1.vb">
       <SubType>Form</SubType>
