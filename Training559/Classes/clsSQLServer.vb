@@ -16,6 +16,8 @@ Public Class clsSQLServer
 		ConnectionString = "Server=.\SQLEXPRESS;Database=SQL_Training;" & "Integrated Security=SSPI;"
 		SqlObject = New SqlConnection(ConnectionString)
 		SqlObject.Open()
+		dClassAndPropsByKey.Clear()
+		dClasses.Clear()
 	End Sub
 
 
@@ -29,7 +31,8 @@ Public Class clsSQLServer
 		DataDict = New OrderedDictionary
 		Dim count As Integer = 0
 
-		Command = New SqlCommand(query, SqlObject)
+		Command.CommandText = query
+		Command.Connection = SqlObject
 		Reader = Command.ExecuteReader()
 
 		While Reader.Read()
@@ -43,7 +46,7 @@ Public Class clsSQLServer
 			count += 1
 		End While
 
-		SqlObject.Close()
+		Reader.Close()
 		Return DataDict
 
 	End Function
@@ -56,12 +59,10 @@ Public Class clsSQLServer
 	''' <returns></returns>
 	Public Function ExecSqlStoredProc(ProcName As String, Optional ParamValues As Object() = Nothing) As Boolean
 
-		SqlObject.Open()
-		Command = New SqlCommand With {
-			.CommandType = CommandType.StoredProcedure,
-			.CommandText = ProcName,
-			.Connection = SqlObject
-		}
+		Command.CommandType = CommandType.StoredProcedure
+		Command.CommandText = ProcName
+		Command.Connection = SqlObject
+		Command.Parameters.Clear()
 
 		If Not (ParamValues Is Nothing) Then
 
@@ -73,16 +74,16 @@ Public Class clsSQLServer
 
 		End If
 
-		Dim rowsAffected As Integer = Command.ExecuteNonQuery
+		Try
 
-		If rowsAffected > 0 Then
-			SqlObject.Close()
+			Command.ExecuteNonQuery()
+			Reader.Close()
 			Return True
-
-		Else
-			SqlObject.Close()
+		Catch ex As Exception
+			Console.WriteLine(ex.Message)
+			Reader.Close()
 			Return False
-		End If
+		End Try
 
 	End Function
 End Class

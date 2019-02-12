@@ -9,31 +9,26 @@
 
 	End Sub
 	''' <summary>
-	''' Constructor used when loading information from the DB (JH 2-7-19)
+	''' Constructor for creating new instantiations of clsClassProp objects(JH 2-11-19)
 	''' </summary>
-	Sub New(name As String, arrayIndex As Integer, parentKey As ULong, key As ULong)
+	''' <param name="name">Name parameter</param>
+	''' <param name="arrayIndex">ArrayIndex parameter</param>
+	''' <param name="parentKey">Parent Key Parameter</param>
+	''' <param name="key">Optional key parameter</param>
+	Sub New(name As String, arrayIndex As Integer, parentKey As ULong, Optional key As ULong = Nothing)
 
 		ClassAndPropsKeyIndex += 1
 		Me.Name = name
 		Me.ArrayIndex = arrayIndex
 		Me.ParentKey = parentKey
-		Me.Key = key
-		dClassAndPropsByKey(parentKey).props.Insert(arrayIndex, name, Me)
-		dClassAndPropsByKey.Add(key, Me)
+		If key Then
+			Me.Key = key
+		Else
+			Me.Key = ClassAndPropsKeyIndex
+		End If
+		dClassAndPropsByKey(Me.ParentKey).props.Insert(Me.ArrayIndex, Me.Name, Me)
+		dClassAndPropsByKey.Add(Me.Key, Me)
 
-	End Sub
-	''' <summary>
-	''' Constructor for the clsClassProp class , sets properties, and adds this to parent props and dclassAndPropsByKey (JH 2-4-19)
-	''' </summary>
-	Sub New(name As String, arrayIndex As Integer, parentKey As ULong)
-
-		ClassAndPropsKeyIndex += 1
-		Me.Name = name
-		Key = ClassAndPropsKeyIndex
-		Me.ArrayIndex = arrayIndex
-		Me.ParentKey = parentKey
-		dClassAndPropsByKey(parentKey).props.Insert(arrayIndex, name, Me)
-		dClassAndPropsByKey.Add(Key, Me)
 
 	End Sub
 

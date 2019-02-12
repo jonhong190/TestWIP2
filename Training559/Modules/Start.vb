@@ -15,6 +15,18 @@ Module Start
 	Public SqlServerObj As clsSQLServer '** holds the clsSQLServer class object (JH 2-6-19)
 
 
+
+	''' <summary>
+	''' Routine instanstiates new clsSQLServer class object then calls 
+	''' LoadClassesFromDatabase sub (JH 2-12-19)
+	''' </summary>
+	Sub Startup()
+		SqlServerObj = New clsSQLServer()
+		CreateDgClasses()
+		LoadClassesFromDatabase(SqlServerObj)
+		GetAllDbTableAndCols(SqlServerObj)
+	End Sub
+
 	''' <summary>
 	''' Conversion of date to current time and date (JH 1-31-19)
 	''' </summary>
@@ -110,6 +122,21 @@ Module Start
 
 	End Sub
 
+
+	''' <summary>
+	''' Function handles creating a row in the screen table (JH 2-11-19)
+	''' </summary>
+	''' <param name="clsObj"></param>
+	Sub CreateDtRows(clsObj As Object)
+
+		Dim row = dtClasses.NewRow()
+		row("Key") = clsObj.Value("ClassID")
+		row("ClassName") = clsObj.Value("ClassName")
+		row("ArrayIndex") = clsObj.Value("ArrayIndex")
+		dtClasses.Rows.Add(row)
+
+	End Sub
+
 	''' <summary>
 	''' Handles creating inital columns for DtClasses, rows are added as the DB query fills dClasses and dclassAndPropsByKey dictionaries (JH 2-7-19)
 	''' </summary>
@@ -130,6 +157,25 @@ Module Start
 
 	End Sub
 
+	''' <summary>
+	''' Function handles replacing the screen table rows after a class is deleted(JH 2-11-19)
+	''' </summary>
+	Sub ReplaceDtClassRows()
+
+		dtClasses.Clear()
+		CreateDgClasses()
+
+		For Each item In dClasses
+
+			Dim row = dtClasses.NewRow()
+			row("Key") = item.Value.Key
+			row("ClassName") = item.Value.Name
+			row("ArrayIndex") = item.Value.ArrayIndex
+			dtClasses.Rows.Add(row)
+
+		Next
+
+	End Sub
 	''' <summary>
 	''' Handles creating the dgClassProps table (JH 2-7-19)
 	''' </summary>

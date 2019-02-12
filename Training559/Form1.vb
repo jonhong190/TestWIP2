@@ -4,15 +4,11 @@
 	''' </summary>
 	Sub Initialize()
 
-		dClasses.Clear()
-		dClassAndPropsByKey.Clear()
-		Startup()
 		txtLog.Text = defaultTxt
 		cmbClass.Text = cmbClass.Items(0)
 		selectedClass = cmbClass.Text
 		txtDelete.Text = ""
 		txtCount.Text = ClassAndPropsKeyIndex
-		dgClasses.DataSource = dtClasses
 
 	End Sub
 
@@ -39,6 +35,8 @@
 	Public Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 		Try
 			Initialize()
+			Startup()
+			dgClasses.DataSource = dtClasses
 		Catch ex As Exception
 			CreateErrorMessage(ex)
 		End Try
@@ -89,18 +87,18 @@
 	Public Sub btnAddClass_Click(sender As Object, e As EventArgs) Handles btnAddClass.Click
 
 		Try
-			Dim clsObj = New clsClass()
-			SelectDBProcedure("Add", clsObj,)
+			Dim clsObj = New clsClass(, ,)
+			SelectDBProcedure("Add", clsObj)
 			AddClassAndPropRows(clsObj)
 
 			Dim clsClassProp1 = New clsClassProp("Name", 0, clsObj.Key)
-			SelectDBProcedure("Add", , clsClassProp1)
+			SelectDBProcedure("Add", clsClassProp1)
 
 			Dim clsClassProp2 = New clsClassProp("Enabled", 1, clsObj.Key)
-			SelectDBProcedure("Add", , clsClassProp2)
+			SelectDBProcedure("Add", clsClassProp2)
 
 			Dim clsClassProp3 = New clsClassProp("Size", 2, clsObj.Key)
-			SelectDBProcedure("Add", , clsClassProp3)
+			SelectDBProcedure("Add", clsClassProp3)
 
 			SetLogText(clsObj.Name, "Add")
 
@@ -119,6 +117,7 @@
 		Try
 
 			dtClasses.Rows.RemoveAt(index)
+			ReplaceDtClassRows()
 			dtClassProps = Nothing
 			dgClasses.DataSource = dtClasses
 			dgClassProps.DataSource = dtClassProps
@@ -168,14 +167,14 @@
 				Dim index = IndexByName(txtDelete.Text)
 				Dim dClassesTarget = dClasses(index)
 
-				RemoveClassRow(index)
-				SelectDBProcedure("Delete", dClassesTarget, )
 				dClasses(index).Remove()
 				UpdateIndex()
+				RemoveClassRow(index)
+				SelectDBProcedure("Delete", dClassesTarget)
 				SetLogText(dClassesTarget.name, "Minus")
 
 				'class property delete (JH 2-7-19)
-			ElseIf txtDelete.Text <> "" AndAlso dclasses.Contains(txtDelete.Text.Substring(0, txtDelete.Text.IndexOf("."))) Then
+			ElseIf txtDelete.Text <> "" AndAlso dClasses.Contains(txtDelete.Text.Substring(0, txtDelete.Text.IndexOf("."))) Then
 
 				Dim className = txtDelete.Text.Substring(0, txtDelete.Text.IndexOf("."))
 				Dim propName = txtDelete.Text.Substring(txtDelete.Text.IndexOf(".") + 1)
@@ -184,7 +183,7 @@
 					SetLogText("No Name", "Minus")
 				Else
 
-					SelectDBProcedure("Delete", , dClassAndPropsByKey(clsPropToDeleteID))
+					SelectDBProcedure("Delete", dClassAndPropsByKey(clsPropToDeleteID))
 					RemovePropRow(propName)
 					SetLogText(txtDelete.Text, "Minus")
 

@@ -4,34 +4,13 @@ Imports System.Xml.Serialization
 Imports System.Text
 
 Module DatabaseFunctions
-	''' <summary>
-	''' Routine instanstiates new clsSQLServer class object then calls 
-	''' LoadClassesFromDatabase sub
-	''' </summary>
-	Sub Startup()
-
-		Try
-			SqlServerObj = New clsSQLServer()
-			CreateDgClasses()
-			LoadClassesFromDatabase(SqlServerObj)
-			GetAllDbTableAndCols(SqlServerObj)
-		Catch ex As Exception
-			Console.WriteLine(ex.Message)
-		End Try
-
-	End Sub
 
 	''' <summary>
 	''' Sub handles updating ClassAndPropsKeyIndex to highest Key after loading data from the db (JH 2-6-19)
 	''' </summary>
 	Sub UpdateClassAndPropsKeyIndex()
-
-		Try
-			ClassAndPropsKeyIndex = dClassAndPropsByKey.Keys.ElementAt(dClassAndPropsByKey.Count - 1)
-		Catch ex As Exception
-			Console.WriteLine(ex.Message)
-		End Try
-
+		Dim d = SqlServerObj.GetSqlData("SELECT * FROM ClassProps ORDER BY ClassPropID")
+		ClassAndPropsKeyIndex = d(d.Count - 1)("ClassPropID")
 	End Sub
 
 
@@ -54,22 +33,20 @@ Module DatabaseFunctions
 
 					Dim clsObj As clsClass = New clsClass(item.Value("ClassName"), item.Value("ClassID"), item.Value("ArrayIndex"))
 
-					Dim row = dtClasses.NewRow()
-					row("Key") = item.Value("ClassID")
-					row("ClassName") = item.Value("ClassName")
-					row("ArrayIndex") = item.Value("ArrayIndex")
-					dtClasses.Rows.Add(row)
+					CreateDtRows(item)
 
 				Next
 				'Use querried data to create new clsClassProp instantiated objects(JH 2-7-19)
-				DBobj.SqlObject.Open()
 				dbDict = DBobj.GetSqlData("SELECT * FROM ClassProps")
 
 				For Each item In dbDict
 					Dim clsProp As clsClassProp = New clsClassProp(item.Value("PropName"), item.Value("ArrayIndex"), item.Value("ClassID"), item.Value("ClassPropID"))
 				Next
 
-				UpdateClassAndPropsKeyIndex()
+				If dClassAndPropsByKey.Count > 0 Then
+					UpdateClassAndPropsKeyIndex()
+				End If
+
 
 			End If
 		Catch ex As Exception
@@ -83,55 +60,54 @@ Module DatabaseFunctions
 	''' and parameter names need to be sent to the DB (JH 2-7-19)
 	''' </summary>
 	''' <param name="procType">Type of operation</param>
-	''' <param name="clsObj">Optional parameter, clsClass Object</param>
-	''' <param name="clsObjProp">OPtional parameter, clsProp Object</param>
-	Sub SelectDBProcedure(procType As String, Optional clsObj As clsClass = Nothing, Optional clsObjProp As clsClassProp = Nothing)
+	''' <param name="obj">Optional object parameter passed to determine which type of object to 
+	''' enter or delete from db</param>
+	Sub SelectDBProcedure(procType As String, Optional obj As Object = Nothing)
 		Try
 			'array to hold the hard coded names for DB procedure parameters
 			Dim addParams As Object()
 
-			If Not clsObj Is Nothing Then
+			If Not obj Is Nothing Then
 
-				If procType = "Add" Then
+				If TypeOf obj Is clsClass Then
 
-					addParams = New Object() {clsObj.Key, clsObj.Name, clsObj.ArrayIndex}
-					paramName = New Object() {"@ClassID", "@ClassName", "@ArrayIndex"}
-					SqlServerObj.SqlObject.Close()
-					SqlServerObj.ExecSqlStoredProc("AddClass", addParams)
+					If procType = "Add" Then
 
-				ElseIf procType = "Delete" Then
+						addParams = New Object() {obj.Key, obj.Name, obj.ArrayIndex}
+						paramName = New Object() {"@ClassID", "@ClassName", "@ArrayIndex"}
 
-					addParams = New Object() {clsObj.Key}
-					paramName = New Object() {"@ClassID"}
-					SqlServerObj.SqlObject.Close()
-					SqlServerObj.ExecSqlStoredProc("DeleteClass", addParams)
+						SqlServerObj.ExecSqlStoredProc("AddClass", addParams)
 
+					ElseIf procType = "Delete" Then
+
+						addParams = New Object() {obj.Key}
+						paramName = New Object() {"@ClassID"}
+						SqlServerObj.ExecSqlStoredProc("DeleteClass", addParams)
+
+
+					End If
+
+				ElseIf TypeOf obj Is clsClassProp Then
+
+					If procType = "Add" Then
+
+						addParams = New Object() {obj.Key, obj.ParentKey, obj.Name, obj.ArrayIndex}
+						paramName = New Object() {"@ClassPropID", "@ClassID", "@PropName", "@ArrayIndex"}
+						SqlServerObj.ExecSqlStoredProc("AddClassProp", addParams)
+
+					ElseIf procType = "Delete" Then
+
+						addParams = New Object() {obj.Key}
+						paramName = New Object() {"@ClassPropID"}
+						SqlServerObj.ExecSqlStoredProc("DeleteClassProps", addParams)
+
+					End If
 
 				End If
-
-			ElseIf Not clsObjProp Is Nothing Then
-
-				If procType = "Add" Then
-
-					addParams = New Object() {clsObjProp.Key, clsObjProp.ParentKey, clsObjProp.Name, clsObjProp.ArrayIndex}
-					paramName = New Object() {"@ClassPropID", "@ClassID", "@PropName", "@ArrayIndex"}
-					SqlServerObj.SqlObject.Close()
-					SqlServerObj.ExecSqlStoredProc("AddClassProp", addParams)
-
-				ElseIf procType = "Delete" Then
-
-					addParams = New Object() {clsObjProp.Key}
-					paramName = New Object() {"@ClassPropID"}
-					SqlServerObj.SqlObject.Close()
-					SqlServerObj.ExecSqlStoredProc("DeleteClassProps", addParams)
-
-				End If
-
 			End If
 		Catch ex As Exception
-
+			Console.WriteLine(ex.Message)
 		End Try
-
 
 	End Sub
 
@@ -194,7 +170,6 @@ Module DatabaseFunctions
 			Dim sqlString = "SELECT INFORMATION_SCHEMA.TABLES.TABLE_NAME, COLUMN_NAME FROM INFORMATION_SCHEMA.TABLES
 JOIN INFORMATION_SCHEMA.COLUMNS ON INFORMATION_SCHEMA.COLUMNS.TABLE_NAME = INFORMATION_SCHEMA.TABLES.TABLE_NAME"
 
-			DbObj.SqlObject.Open()
 			DatabaseInfo = SqlServerObj.GetSqlData(sqlString)
 			Return DatabaseInfo
 

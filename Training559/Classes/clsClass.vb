@@ -8,31 +8,35 @@ Public Class clsClass
 	Property Props As OrderedDictionary ' holds child props in this dictionary(JH 2-4-19)
 
 	''' <summary>
-	''' Constructor used when loading data form DB (JH 2-7-19)
+	''' Constructor function for instantiating a new clsClass object (JH 2-11-17)
 	''' </summary>
-	Sub New(name As String, key As Integer, arrayIndex As Integer)
-		Me.Name = name
-		Me.ArrayIndex = arrayIndex
-		Me.Key = key
-		Props = New OrderedDictionary
-		dClasses.Insert(arrayIndex, name, Me)
-		dClassAndPropsByKey.Add(key, Me)
+	''' <param name="name">Optional name parameter</param>
+	''' <param name="key">Optional key parameter</param>
+	''' <param name="arrayIndex">Optional ArrayIndex parameter</param>
+	Sub New(Optional name As String = Nothing, Optional key As Integer = 0, Optional arrayIndex As Integer = 0)
 
-	End Sub
-
-
-	''' <summary>
-	''' Constructor for clsClass object, sets properties, and increments ClassAndPropKeysIndex, then inserts this into dclasses and 
-	''' dClassAndPropsByKey(JH 2-4-19)
-	''' </summary>
-	Sub New()
 		ClassAndPropsKeyIndex += 1
-		Name = IncrementName(selectedClass)
-		Key = ClassAndPropsKeyIndex
-		ArrayIndex = dClasses.Count
+		If name <> Nothing Then
+			Me.Name = name
+		Else
+			Me.Name = IncrementName(selectedClass)
+		End If
+
+		If key <> 0 Then
+			Me.Key = key
+		Else
+			Me.Key = ClassAndPropsKeyIndex
+		End If
+
+		If arrayIndex <> 0 Then
+			Me.ArrayIndex = arrayIndex
+		Else
+			Me.ArrayIndex = dClasses.Count
+		End If
+
 		Props = New OrderedDictionary
-		dClasses.Insert(ArrayIndex, Name, Me)
-		dClassAndPropsByKey.Add(Key, Me)
+		dClasses.Insert(Me.ArrayIndex, Me.Name, Me)
+		dClassAndPropsByKey.Add(Me.Key, Me)
 
 	End Sub
 
