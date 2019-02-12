@@ -93,18 +93,16 @@ Public Class clsSQLServer
 		Command.Connection = SqlObject
 		Reader = Command.ExecuteReader()
 
-		If Reader.Read() Then
-			While Reader.Read()
+		While Reader.Read()
 
-				Dim user As clsUser = New clsUser(Reader.Item("Username"), Reader.Item("Password"), Reader.Item("FirstName"), Reader.Item("LastName"), Reader.Item("ActivityTimeout"))
-				dUsers.Add(Reader.Item("Username"), user)
+			Dim user As clsUser = New clsUser(Reader.Item("Username"), Reader.Item("Password"), Reader.Item("FirstName"), Reader.Item("LastName"), Reader.Item("ActivityTimeout"))
+			dUsers.Add(Reader.Item("Username"), user)
 
-			End While
-		End If
+		End While
 
 		Reader.Close()
-
 		Return dUsers
+
 	End Function
 
 End Class

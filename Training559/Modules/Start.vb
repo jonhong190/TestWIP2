@@ -14,6 +14,8 @@ Module Start
 	Public paramName As New Object() '* global array to hold parameter names when passing values to the DB stored procedures (JH 2-6-19)
 	Public SqlServerObj As clsSQLServer '** holds the clsSQLServer class object (JH 2-6-19)
 	Public dUsers As Dictionary(Of String, clsUser) = New Dictionary(Of String, clsUser) '** dictionary to hold users (JH 2-12-19)
+	Public LoggedUser As clsUser '** holds the current logged in use (JH 2-12-19)
+
 
 
 
@@ -123,6 +125,24 @@ Module Start
 
 	End Sub
 
+
+	Function ClientLoginRequest(Username As String, Password As String)
+		Try
+			If Not dUsers.ContainsKey(Username) AndAlso Not dUsers(Username).Password = Password Then
+				Return False
+			End If
+
+			LoggedUser = dUsers(Username)
+			LoggedUser.LastLogged = GetCurrentDateAndTime()
+			SelectDBProcedure(, LoggedUser)
+			Return True
+		Catch ex As Exception
+			Console.WriteLine(ex.Message)
+			Return Nothing
+		End Try
+
+
+	End Function
 
 	''' <summary>
 	''' Function handles creating a row in the screen table (JH 2-11-19)

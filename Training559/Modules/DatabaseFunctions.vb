@@ -62,7 +62,7 @@ Module DatabaseFunctions
 	''' <param name="procType">Type of operation</param>
 	''' <param name="obj">Optional object parameter passed to determine which type of object to 
 	''' enter or delete from db</param>
-	Sub SelectDBProcedure(procType As String, Optional obj As Object = Nothing)
+	Sub SelectDBProcedure(Optional procType As String = "", Optional obj As Object = Nothing)
 		Try
 			'array to hold the hard coded names for DB procedure parameters
 			Dim addParams As Object()
@@ -102,8 +102,14 @@ Module DatabaseFunctions
 						SqlServerObj.ExecSqlStoredProc("DeleteClassProps", addParams)
 
 					End If
+				ElseIf TypeOf obj Is clsUser Then
+
+					paramName = New Object() {"@LastLogged", "@Username"}
+					addParams = New Object() {obj.Username, obj.LastLogged}
+					SqlServerObj.ExecSqlStoredProc("UpdateUserLogTime", addParams)
 
 				End If
+
 			End If
 		Catch ex As Exception
 			Console.WriteLine(ex.Message)

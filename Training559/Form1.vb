@@ -37,6 +37,13 @@
 			Initialize()
 			Startup()
 			dgClasses.DataSource = dtClasses
+			cmbClass.Enabled = False
+			btnAddClass.Enabled = False
+			btnDeleteClass.Enabled = False
+			txtLog.Enabled = False
+			txtCount.Enabled = False
+			btnClearLog.Enabled = False
+			txtDelete.Enabled = False
 		Catch ex As Exception
 			CreateErrorMessage(ex)
 		End Try
@@ -242,13 +249,21 @@
 	Private Sub btnSignIn_Click(sender As Object, e As EventArgs) Handles btnSignIn.Click
 
 		Try
-			cmbClass.Enabled = True
-			btnAddClass.Enabled = True
-			btnDeleteClass.Enabled = True
-			txtLog.Enabled = True
-			txtCount.Enabled = True
-			btnClearLog.Enabled = True
-			txtDelete.Enabled = True
+			If Not IsNothing(txtUserName.Text) AndAlso Not IsNothing(txtPassword.Text) Then
+
+				Dim isLogged As Boolean = ClientLoginRequest(txtUserName.Text, txtPassword.Text)
+
+				If isLogged Then
+					cmbClass.Enabled = True
+					btnAddClass.Enabled = True
+					btnDeleteClass.Enabled = True
+					txtLog.Enabled = True
+					txtCount.Enabled = True
+					btnClearLog.Enabled = True
+					txtDelete.Enabled = True
+				End If
+
+			End If
 		Catch ex As Exception
 			CreateErrorMessage(ex)
 		End Try
@@ -325,7 +340,4 @@
 	End Sub
 
 
-	Private Sub lblUser_Click(sender As Object, e As EventArgs) Handles lblUser.Click
-
-	End Sub
 End Class
