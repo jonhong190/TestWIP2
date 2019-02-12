@@ -324,4 +324,8 @@
 
 	End Sub
 
+
+	Private Sub lblUser_Click(sender As Object, e As EventArgs) Handles lblUser.Click
+
+	End Sub
 End Class

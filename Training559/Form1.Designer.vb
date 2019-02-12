@@ -38,12 +38,18 @@ Partial Class Container
 		Me.Label3 = New System.Windows.Forms.Label()
 		Me.btnClearLog = New System.Windows.Forms.Button()
 		Me.Panel2 = New System.Windows.Forms.Panel()
+		Me.Label7 = New System.Windows.Forms.Label()
+		Me.lblTxtBoxUser = New System.Windows.Forms.Label()
+		Me.txtPassword = New System.Windows.Forms.TextBox()
 		Me.btnSignOut = New System.Windows.Forms.Button()
+		Me.txtUserName = New System.Windows.Forms.TextBox()
 		Me.btnSignIn = New System.Windows.Forms.Button()
 		Me.dgClasses = New System.Windows.Forms.DataGridView()
 		Me.dgClassProps = New System.Windows.Forms.DataGridView()
 		Me.dgClassesLabel = New System.Windows.Forms.Label()
 		Me.dgClassPropsLabel = New System.Windows.Forms.Label()
+		Me.lblUser = New System.Windows.Forms.Label()
+		Me.Label6 = New System.Windows.Forms.Label()
 		Me.Panel1.SuspendLayout()
 		Me.Panel2.SuspendLayout()
 		CType(Me.dgClasses, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -57,7 +63,7 @@ Partial Class Container
 		Me.cmbClass.Font = New System.Drawing.Font("Arial", 10.0!, System.Drawing.FontStyle.Italic)
 		Me.cmbClass.ImeMode = System.Windows.Forms.ImeMode.NoControl
 		Me.cmbClass.Items.AddRange(New Object() {"Button", "Label", "Text", "Form", "List", "Grid", "Image", "Link", "File"})
-		Me.cmbClass.Location = New System.Drawing.Point(24, 89)
+		Me.cmbClass.Location = New System.Drawing.Point(23, 80)
 		Me.cmbClass.Name = "cmbClass"
 		Me.cmbClass.Size = New System.Drawing.Size(160, 24)
 		Me.cmbClass.TabIndex = 0
@@ -65,7 +71,7 @@ Partial Class Container
 		'Label1
 		'
 		Me.Label1.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Bold)
-		Me.Label1.Location = New System.Drawing.Point(21, 70)
+		Me.Label1.Location = New System.Drawing.Point(22, 61)
 		Me.Label1.Name = "Label1"
 		Me.Label1.Size = New System.Drawing.Size(91, 16)
 		Me.Label1.TabIndex = 1
@@ -78,7 +84,7 @@ Partial Class Container
 		Me.btnAddClass.FlatStyle = System.Windows.Forms.FlatStyle.Popup
 		Me.btnAddClass.Font = New System.Drawing.Font("Arial", 10.0!)
 		Me.btnAddClass.ForeColor = System.Drawing.SystemColors.ControlLightLight
-		Me.btnAddClass.Location = New System.Drawing.Point(24, 119)
+		Me.btnAddClass.Location = New System.Drawing.Point(25, 110)
 		Me.btnAddClass.Name = "btnAddClass"
 		Me.btnAddClass.Size = New System.Drawing.Size(160, 47)
 		Me.btnAddClass.TabIndex = 2
@@ -91,7 +97,7 @@ Partial Class Container
 		Me.btnDeleteClass.FlatStyle = System.Windows.Forms.FlatStyle.Popup
 		Me.btnDeleteClass.Font = New System.Drawing.Font("Arial", 10.0!)
 		Me.btnDeleteClass.ForeColor = System.Drawing.SystemColors.ControlLightLight
-		Me.btnDeleteClass.Location = New System.Drawing.Point(24, 224)
+		Me.btnDeleteClass.Location = New System.Drawing.Point(23, 219)
 		Me.btnDeleteClass.Name = "btnDeleteClass"
 		Me.btnDeleteClass.Size = New System.Drawing.Size(160, 53)
 		Me.btnDeleteClass.TabIndex = 3
@@ -110,17 +116,17 @@ Partial Class Container
 		Me.Panel1.Controls.Add(Me.cmbClass)
 		Me.Panel1.Controls.Add(Me.btnDeleteClass)
 		Me.Panel1.Controls.Add(Me.btnAddClass)
-		Me.Panel1.Location = New System.Drawing.Point(12, 33)
+		Me.Panel1.Location = New System.Drawing.Point(12, 34)
 		Me.Panel1.Name = "Panel1"
 		Me.Panel1.Padding = New System.Windows.Forms.Padding(1)
-		Me.Panel1.Size = New System.Drawing.Size(204, 444)
+		Me.Panel1.Size = New System.Drawing.Size(204, 336)
 		Me.Panel1.TabIndex = 5
 		'
 		'Label5
 		'
 		Me.Label5.AutoSize = True
 		Me.Label5.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Bold)
-		Me.Label5.Location = New System.Drawing.Point(21, 180)
+		Me.Label5.Location = New System.Drawing.Point(20, 176)
 		Me.Label5.Name = "Label5"
 		Me.Label5.Size = New System.Drawing.Size(92, 14)
 		Me.Label5.TabIndex = 10
@@ -128,7 +134,7 @@ Partial Class Container
 		'
 		'txtDelete
 		'
-		Me.txtDelete.Location = New System.Drawing.Point(24, 197)
+		Me.txtDelete.Location = New System.Drawing.Point(23, 193)
 		Me.txtDelete.Name = "txtDelete"
 		Me.txtDelete.Size = New System.Drawing.Size(160, 20)
 		Me.txtDelete.TabIndex = 9
@@ -136,7 +142,7 @@ Partial Class Container
 		'Label4
 		'
 		Me.Label4.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Bold)
-		Me.Label4.Location = New System.Drawing.Point(21, 336)
+		Me.Label4.Location = New System.Drawing.Point(22, 285)
 		Me.Label4.Name = "Label4"
 		Me.Label4.Size = New System.Drawing.Size(69, 13)
 		Me.Label4.TabIndex = 8
@@ -146,7 +152,7 @@ Partial Class Container
 		'
 		Me.txtCount.BorderStyle = System.Windows.Forms.BorderStyle.None
 		Me.txtCount.Cursor = System.Windows.Forms.Cursors.Arrow
-		Me.txtCount.Location = New System.Drawing.Point(24, 352)
+		Me.txtCount.Location = New System.Drawing.Point(24, 301)
 		Me.txtCount.Name = "txtCount"
 		Me.txtCount.ReadOnly = True
 		Me.txtCount.Size = New System.Drawing.Size(160, 13)
@@ -155,9 +161,9 @@ Partial Class Container
 		'Label2
 		'
 		Me.Label2.Font = New System.Drawing.Font("Arial", 12.0!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Underline), System.Drawing.FontStyle))
-		Me.Label2.Location = New System.Drawing.Point(49, 18)
+		Me.Label2.Location = New System.Drawing.Point(21, 15)
 		Me.Label2.Name = "Label2"
-		Me.Label2.Size = New System.Drawing.Size(109, 29)
+		Me.Label2.Size = New System.Drawing.Size(163, 29)
 		Me.Label2.TabIndex = 6
 		Me.Label2.Text = "Class Editor"
 		Me.Label2.TextAlign = System.Drawing.ContentAlignment.TopCenter
@@ -166,13 +172,13 @@ Partial Class Container
 		'
 		Me.txtLog.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!)
 		Me.txtLog.ForeColor = System.Drawing.Color.Blue
-		Me.txtLog.Location = New System.Drawing.Point(222, 33)
+		Me.txtLog.Location = New System.Drawing.Point(225, 34)
 		Me.txtLog.MaxLength = 100000
 		Me.txtLog.MinimumSize = New System.Drawing.Size(700, 300)
 		Me.txtLog.Multiline = True
 		Me.txtLog.Name = "txtLog"
 		Me.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-		Me.txtLog.Size = New System.Drawing.Size(750, 300)
+		Me.txtLog.Size = New System.Drawing.Size(750, 336)
 		Me.txtLog.TabIndex = 6
 		Me.txtLog.Text = "--Server Log Loaded--"
 		'
@@ -181,7 +187,7 @@ Partial Class Container
 		Me.Label3.AutoSize = True
 		Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.Label3.ForeColor = System.Drawing.Color.CornflowerBlue
-		Me.Label3.Location = New System.Drawing.Point(219, 17)
+		Me.Label3.Location = New System.Drawing.Point(222, 9)
 		Me.Label3.Name = "Label3"
 		Me.Label3.Size = New System.Drawing.Size(79, 13)
 		Me.Label3.TabIndex = 7
@@ -194,7 +200,7 @@ Partial Class Container
 		Me.btnClearLog.FlatStyle = System.Windows.Forms.FlatStyle.Popup
 		Me.btnClearLog.Font = New System.Drawing.Font("Arial", 10.0!)
 		Me.btnClearLog.ForeColor = System.Drawing.Color.White
-		Me.btnClearLog.Location = New System.Drawing.Point(863, 6)
+		Me.btnClearLog.Location = New System.Drawing.Point(869, 376)
 		Me.btnClearLog.Name = "btnClearLog"
 		Me.btnClearLog.Size = New System.Drawing.Size(109, 24)
 		Me.btnClearLog.TabIndex = 8
@@ -204,12 +210,42 @@ Partial Class Container
 		'Panel2
 		'
 		Me.Panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+		Me.Panel2.Controls.Add(Me.Label7)
+		Me.Panel2.Controls.Add(Me.lblTxtBoxUser)
+		Me.Panel2.Controls.Add(Me.txtPassword)
 		Me.Panel2.Controls.Add(Me.btnSignOut)
+		Me.Panel2.Controls.Add(Me.txtUserName)
 		Me.Panel2.Controls.Add(Me.btnSignIn)
-		Me.Panel2.Location = New System.Drawing.Point(12, 483)
+		Me.Panel2.Location = New System.Drawing.Point(12, 417)
 		Me.Panel2.Name = "Panel2"
-		Me.Panel2.Size = New System.Drawing.Size(204, 100)
+		Me.Panel2.Size = New System.Drawing.Size(204, 180)
 		Me.Panel2.TabIndex = 9
+		'
+		'Label7
+		'
+		Me.Label7.AutoSize = True
+		Me.Label7.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.Label7.Location = New System.Drawing.Point(12, 58)
+		Me.Label7.Name = "Label7"
+		Me.Label7.Size = New System.Drawing.Size(63, 14)
+		Me.Label7.TabIndex = 17
+		Me.Label7.Text = "Password"
+		'
+		'lblTxtBoxUser
+		'
+		Me.lblTxtBoxUser.Font = New System.Drawing.Font("Arial", 8.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.lblTxtBoxUser.Location = New System.Drawing.Point(12, 12)
+		Me.lblTxtBoxUser.Name = "lblTxtBoxUser"
+		Me.lblTxtBoxUser.Size = New System.Drawing.Size(78, 13)
+		Me.lblTxtBoxUser.TabIndex = 16
+		Me.lblTxtBoxUser.Text = "Username"
+		'
+		'txtPassword
+		'
+		Me.txtPassword.Location = New System.Drawing.Point(15, 75)
+		Me.txtPassword.Name = "txtPassword"
+		Me.txtPassword.Size = New System.Drawing.Size(168, 20)
+		Me.txtPassword.TabIndex = 15
 		'
 		'btnSignOut
 		'
@@ -218,12 +254,19 @@ Partial Class Container
 		Me.btnSignOut.FlatStyle = System.Windows.Forms.FlatStyle.Popup
 		Me.btnSignOut.Font = New System.Drawing.Font("Arial", 10.0!)
 		Me.btnSignOut.ForeColor = System.Drawing.Color.White
-		Me.btnSignOut.Location = New System.Drawing.Point(108, 21)
+		Me.btnSignOut.Location = New System.Drawing.Point(107, 118)
 		Me.btnSignOut.Name = "btnSignOut"
-		Me.btnSignOut.Size = New System.Drawing.Size(75, 51)
+		Me.btnSignOut.Size = New System.Drawing.Size(75, 31)
 		Me.btnSignOut.TabIndex = 1
 		Me.btnSignOut.Text = "Sign Out"
 		Me.btnSignOut.UseVisualStyleBackColor = False
+		'
+		'txtUserName
+		'
+		Me.txtUserName.Location = New System.Drawing.Point(14, 28)
+		Me.txtUserName.Name = "txtUserName"
+		Me.txtUserName.Size = New System.Drawing.Size(168, 20)
+		Me.txtUserName.TabIndex = 14
 		'
 		'btnSignIn
 		'
@@ -232,9 +275,9 @@ Partial Class Container
 		Me.btnSignIn.FlatStyle = System.Windows.Forms.FlatStyle.Popup
 		Me.btnSignIn.Font = New System.Drawing.Font("Arial", 10.0!)
 		Me.btnSignIn.ForeColor = System.Drawing.Color.White
-		Me.btnSignIn.Location = New System.Drawing.Point(23, 21)
+		Me.btnSignIn.Location = New System.Drawing.Point(15, 118)
 		Me.btnSignIn.Name = "btnSignIn"
-		Me.btnSignIn.Size = New System.Drawing.Size(75, 51)
+		Me.btnSignIn.Size = New System.Drawing.Size(75, 31)
 		Me.btnSignIn.TabIndex = 0
 		Me.btnSignIn.Text = "Sign In"
 		Me.btnSignIn.UseVisualStyleBackColor = False
@@ -255,14 +298,14 @@ Partial Class Container
 		DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
 		DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
 		Me.dgClasses.DefaultCellStyle = DataGridViewCellStyle1
-		Me.dgClasses.Location = New System.Drawing.Point(222, 355)
+		Me.dgClasses.Location = New System.Drawing.Point(225, 417)
 		Me.dgClasses.MultiSelect = False
 		Me.dgClasses.Name = "dgClasses"
 		Me.dgClasses.ReadOnly = True
 		Me.dgClasses.RowHeadersVisible = False
 		Me.dgClasses.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
 		Me.dgClasses.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-		Me.dgClasses.Size = New System.Drawing.Size(300, 228)
+		Me.dgClasses.Size = New System.Drawing.Size(324, 180)
 		Me.dgClasses.TabIndex = 10
 		'
 		'dgClassProps
@@ -282,19 +325,19 @@ Partial Class Container
 		DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
 		Me.dgClassProps.DefaultCellStyle = DataGridViewCellStyle2
 		Me.dgClassProps.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically
-		Me.dgClassProps.Location = New System.Drawing.Point(555, 355)
+		Me.dgClassProps.Location = New System.Drawing.Point(555, 417)
 		Me.dgClassProps.Name = "dgClassProps"
 		Me.dgClassProps.ReadOnly = True
 		Me.dgClassProps.RowHeadersVisible = False
 		Me.dgClassProps.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-		Me.dgClassProps.Size = New System.Drawing.Size(417, 228)
+		Me.dgClassProps.Size = New System.Drawing.Size(417, 180)
 		Me.dgClassProps.TabIndex = 11
 		'
 		'dgClassesLabel
 		'
 		Me.dgClassesLabel.Font = New System.Drawing.Font("Arial", 8.0!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle))
 		Me.dgClassesLabel.ForeColor = System.Drawing.Color.CornflowerBlue
-		Me.dgClassesLabel.Location = New System.Drawing.Point(219, 336)
+		Me.dgClassesLabel.Location = New System.Drawing.Point(222, 398)
 		Me.dgClassesLabel.Name = "dgClassesLabel"
 		Me.dgClassesLabel.Size = New System.Drawing.Size(85, 16)
 		Me.dgClassesLabel.TabIndex = 12
@@ -305,11 +348,32 @@ Partial Class Container
 		Me.dgClassPropsLabel.AutoSize = True
 		Me.dgClassPropsLabel.Font = New System.Drawing.Font("Arial", 8.0!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle))
 		Me.dgClassPropsLabel.ForeColor = System.Drawing.Color.CornflowerBlue
-		Me.dgClassPropsLabel.Location = New System.Drawing.Point(552, 336)
+		Me.dgClassPropsLabel.Location = New System.Drawing.Point(552, 398)
 		Me.dgClassPropsLabel.Name = "dgClassPropsLabel"
 		Me.dgClassPropsLabel.Size = New System.Drawing.Size(96, 13)
 		Me.dgClassPropsLabel.TabIndex = 13
 		Me.dgClassPropsLabel.Text = "Class Properties"
+		'
+		'lblUser
+		'
+		Me.lblUser.Font = New System.Drawing.Font("Arial", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.lblUser.ForeColor = System.Drawing.SystemColors.MenuHighlight
+		Me.lblUser.Location = New System.Drawing.Point(866, 9)
+		Me.lblUser.Name = "lblUser"
+		Me.lblUser.Size = New System.Drawing.Size(109, 23)
+		Me.lblUser.TabIndex = 14
+		Me.lblUser.Text = "None is logged in"
+		'
+		'Label6
+		'
+		Me.Label6.AutoSize = True
+		Me.Label6.Font = New System.Drawing.Font("Arial", 8.0!, CType((System.Drawing.FontStyle.Bold Or System.Drawing.FontStyle.Italic), System.Drawing.FontStyle), System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+		Me.Label6.ForeColor = System.Drawing.Color.CornflowerBlue
+		Me.Label6.Location = New System.Drawing.Point(12, 398)
+		Me.Label6.Name = "Label6"
+		Me.Label6.Size = New System.Drawing.Size(39, 13)
+		Me.Label6.TabIndex = 15
+		Me.Label6.Text = "Login"
 		'
 		'Container
 		'
@@ -317,6 +381,8 @@ Partial Class Container
 		Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
 		Me.BackColor = System.Drawing.Color.LightYellow
 		Me.ClientSize = New System.Drawing.Size(980, 607)
+		Me.Controls.Add(Me.Label6)
+		Me.Controls.Add(Me.lblUser)
 		Me.Controls.Add(Me.dgClassPropsLabel)
 		Me.Controls.Add(Me.dgClassesLabel)
 		Me.Controls.Add(Me.dgClassProps)
@@ -333,6 +399,7 @@ Partial Class Container
 		Me.Panel1.ResumeLayout(False)
 		Me.Panel1.PerformLayout()
 		Me.Panel2.ResumeLayout(False)
+		Me.Panel2.PerformLayout()
 		CType(Me.dgClasses, System.ComponentModel.ISupportInitialize).EndInit()
 		CType(Me.dgClassProps, System.ComponentModel.ISupportInitialize).EndInit()
 		Me.ResumeLayout(False)
@@ -360,4 +427,10 @@ Partial Class Container
 	Friend WithEvents dgClassProps As DataGridView
 	Friend WithEvents dgClassesLabel As Label
 	Friend WithEvents dgClassPropsLabel As Label
+	Friend WithEvents Label7 As Label
+	Friend WithEvents lblTxtBoxUser As Label
+	Friend WithEvents txtPassword As TextBox
+	Friend WithEvents txtUserName As TextBox
+	Friend WithEvents lblUser As Label
+	Friend WithEvents Label6 As Label
 End Class
