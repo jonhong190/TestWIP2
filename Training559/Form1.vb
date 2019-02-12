@@ -44,6 +44,8 @@
 			txtCount.Enabled = False
 			btnClearLog.Enabled = False
 			txtDelete.Enabled = False
+			dgClasses.Enabled = False
+			dgClassProps.Enabled = False
 		Catch ex As Exception
 			CreateErrorMessage(ex)
 		End Try
@@ -230,6 +232,9 @@
 	Private Sub btnSignOut_Click(sender As Object, e As EventArgs) Handles btnSignOut.Click
 
 		Try
+			SetLogText(Nothing, "Logout")
+			lblUser.Text = "None is logged in."
+			LoggedUser = Nothing
 			cmbClass.Enabled = False
 			btnAddClass.Enabled = False
 			btnDeleteClass.Enabled = False
@@ -237,23 +242,52 @@
 			txtCount.Enabled = False
 			btnClearLog.Enabled = False
 			txtDelete.Enabled = False
+			dgClasses.Enabled = False
+			dgClassProps.Enabled = False
+			btnSignIn.Enabled = True
 		Catch ex As Exception
 			CreateErrorMessage(ex)
 		End Try
 
 	End Sub
 
+	Private Sub ShowErrorForm()
+
+		Dim label As New Label()
+		Dim errorForm As New Form()
+
+		label.AutoSize = False
+		label.Width = errorForm.Width
+		label.Font = txtDelete.Font
+
+		label.Text = "Incorrect login or password entry."
+		label.Location = New Point(errorForm.Left + 30, errorForm.Top + 20)
+
+		errorForm.Controls.Add(label)
+		errorForm.Text = "Error"
+		errorForm.Width = 250
+		errorForm.Height = 100
+		errorForm.Show()
+
+	End Sub
+
+
 	''' <summary>
-	''' on sign in, enable all screen components (JH 1-29-19)
+	''' Checks if values exist in the username and password textboxes, then if so, pass the 
+	''' values to the ClientLoginRequest function, and if there is a succesful login, enables screen elements (JH 2-12-19)
 	''' </summary>
 	Private Sub btnSignIn_Click(sender As Object, e As EventArgs) Handles btnSignIn.Click
 
 		Try
 			If Not IsNothing(txtUserName.Text) AndAlso Not IsNothing(txtPassword.Text) Then
 
-				Dim isLogged As Boolean = ClientLoginRequest(txtUserName.Text, txtPassword.Text)
+				Dim isLogged = ClientLoginRequest(txtUserName.Text, txtPassword.Text)
 
 				If isLogged Then
+
+					lblUser.Text = LoggedUser.FirstName + " " + LoggedUser.LastName + " is logged in."
+					txtUserName.Text = ""
+					txtPassword.Text = ""
 					cmbClass.Enabled = True
 					btnAddClass.Enabled = True
 					btnDeleteClass.Enabled = True
@@ -261,6 +295,13 @@
 					txtCount.Enabled = True
 					btnClearLog.Enabled = True
 					txtDelete.Enabled = True
+					dgClasses.Enabled = True
+					dgClassProps.Enabled = True
+					btnSignIn.Enabled = False
+					SetLogText(Nothing, "Login")
+
+				Else
+					ShowErrorForm()
 				End If
 
 			End If
@@ -291,7 +332,10 @@
 					txtLog.Text += vbCrLf & GetCurrentDateAndTime() & "Class " & selection & " was removed from the Server."
 
 				End If
-
+			ElseIf operation = "Login" Then
+				txtLog.Text += vbCrLf & GetCurrentDateAndTime() & " User " & LoggedUser.FirstName + " " + LoggedUser.LastName & " logged in to app."
+			ElseIf operation = "Logout" Then
+				txtLog.Text += vbCrLf & GetCurrentDateAndTime() & " User " & LoggedUser.FirstName + " " + LoggedUser.LastName & " logged out of app."
 			End If
 
 			txtCount.Text = ClassAndPropsKeyIndex

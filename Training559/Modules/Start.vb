@@ -125,20 +125,33 @@ Module Start
 
 	End Sub
 
-
+	''' <summary>
+	''' Function takes in textbox entries for username and password then searches for matches from a dictionary
+	''' of users.  If there is a match, sends the argument values to the SqlServer to process the appropriate stored procedure(JH 2-12-19)
+	''' </summary>
+	''' <param name="Username">username textbox entry</param>
+	''' <param name="Password">password textbox entry</param>
+	''' <returns></returns>
 	Function ClientLoginRequest(Username As String, Password As String)
 		Try
-			If Not dUsers.ContainsKey(Username) AndAlso Not dUsers(Username).Password = Password Then
-				Return False
+
+			If dUsers.ContainsKey(Username) Then
+				If dUsers(Username).Password = Password Then
+					Dim formatDateStr = GetCurrentDateAndTime().Substring(1, GetCurrentDateAndTime().LastIndexOf(" "))
+
+					LoggedUser = dUsers(Username)
+					LoggedUser.LastLogged = Format(Date.Now, "yyyy-MM-dd hh:mm:ss")
+
+					SelectDBProcedure(, LoggedUser)
+					Return True
+				End If
 			End If
 
-			LoggedUser = dUsers(Username)
-			LoggedUser.LastLogged = GetCurrentDateAndTime()
-			SelectDBProcedure(, LoggedUser)
-			Return True
+			Return False
+
 		Catch ex As Exception
 			Console.WriteLine(ex.Message)
-			Return Nothing
+			Return False
 		End Try
 
 

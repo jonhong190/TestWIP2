@@ -105,7 +105,7 @@ Module DatabaseFunctions
 				ElseIf TypeOf obj Is clsUser Then
 
 					paramName = New Object() {"@LastLogged", "@Username"}
-					addParams = New Object() {obj.Username, obj.LastLogged}
+					addParams = New Object() {obj.LastLogged, obj.Username}
 					SqlServerObj.ExecSqlStoredProc("UpdateUserLogTime", addParams)
 
 				End If
