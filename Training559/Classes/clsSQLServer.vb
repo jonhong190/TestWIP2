@@ -18,6 +18,7 @@ Public Class clsSQLServer
 		SqlObject.Open()
 		dClassAndPropsByKey.Clear()
 		dClasses.Clear()
+		LoadUsersFromDatabase()
 	End Sub
 
 
@@ -75,7 +76,6 @@ Public Class clsSQLServer
 		End If
 
 		Try
-
 			Command.ExecuteNonQuery()
 			Reader.Close()
 			Return True
@@ -86,4 +86,25 @@ Public Class clsSQLServer
 		End Try
 
 	End Function
+
+	Function LoadUsersFromDatabase()
+
+		Command.CommandText = "Select * FROM Users"
+		Command.Connection = SqlObject
+		Reader = Command.ExecuteReader()
+
+		If Reader.Read() Then
+			While Reader.Read()
+
+				Dim user As clsUser = New clsUser(Reader.Item("Username"), Reader.Item("Password"), Reader.Item("FirstName"), Reader.Item("LastName"), Reader.Item("ActivityTimeout"))
+				dUsers.Add(Reader.Item("Username"), user)
+
+			End While
+		End If
+
+		Reader.Close()
+
+		Return dUsers
+	End Function
+
 End Class

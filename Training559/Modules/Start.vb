@@ -13,6 +13,7 @@ Module Start
 	Public DatabaseInfo As OrderedDictionary = New OrderedDictionary ' stores DB table and column names (JH 2-11-19)
 	Public paramName As New Object() '* global array to hold parameter names when passing values to the DB stored procedures (JH 2-6-19)
 	Public SqlServerObj As clsSQLServer '** holds the clsSQLServer class object (JH 2-6-19)
+	Public dUsers As Dictionary(Of String, clsUser) = New Dictionary(Of String, clsUser) '** dictionary to hold users (JH 2-12-19)
 
 
 
