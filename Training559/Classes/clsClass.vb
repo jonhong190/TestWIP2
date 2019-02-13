@@ -46,7 +46,7 @@ Public Class clsClass
 	Sub Remove()
 
 		For i As Integer = 0 To Props.Count - 1
-			Props(i).Remove()
+			dClassAndPropsByKey.Remove(Props(i).key)
 		Next
 
 		Props.Clear()

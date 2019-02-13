@@ -1,4 +1,6 @@
-﻿Public Class Container
+﻿Imports System.Timers
+
+Public Class Container
 	''' <summary>
 	''' Initializes all the screen objects and variables to default settings (JH 1-29-19)
 	''' </summary>
@@ -37,15 +39,7 @@
 			Initialize()
 			Startup()
 			dgClasses.DataSource = dtClasses
-			cmbClass.Enabled = False
-			btnAddClass.Enabled = False
-			btnDeleteClass.Enabled = False
-			txtLog.Enabled = False
-			txtCount.Enabled = False
-			btnClearLog.Enabled = False
-			txtDelete.Enabled = False
-			dgClasses.Enabled = False
-			dgClassProps.Enabled = False
+			btnSignOut.Invoke(New MethodInvoker(AddressOf btnSignOut.PerformClick))
 		Catch ex As Exception
 			CreateErrorMessage(ex)
 		End Try
@@ -126,7 +120,7 @@
 		Try
 
 			dtClasses.Rows.RemoveAt(index)
-			ReplaceDtClassRows()
+			ReIndexDtClassesColumns()
 			dtClassProps = Nothing
 			dgClasses.DataSource = dtClasses
 			dgClassProps.DataSource = dtClassProps
@@ -177,10 +171,11 @@
 				Dim dClassesTarget = dClasses(index)
 
 				dClasses(index).Remove()
-				UpdateIndex()
+				UpdateIndex("dClasses")
 				RemoveClassRow(index)
 				SelectDBProcedure("Delete", dClassesTarget)
 				SetLogText(dClassesTarget.name, "Minus")
+				txtDelete.Text = ""
 
 				'class property delete (JH 2-7-19)
 			ElseIf txtDelete.Text <> "" AndAlso dClasses.Contains(txtDelete.Text.Substring(0, txtDelete.Text.IndexOf("."))) Then
@@ -193,18 +188,20 @@
 				Else
 
 					SelectDBProcedure("Delete", dClassAndPropsByKey(clsPropToDeleteID))
+					dClassAndPropsByKey(clsPropToDeleteID).Remove()
 					RemovePropRow(propName)
+					dgClassProps.DataSource = dtClassProps
 					SetLogText(txtDelete.Text, "Minus")
 
 				End If
+
+				txtDelete.Text = className
 
 			Else
 				SetLogText("Error", "Minus")
 			End If
 
-			dClasses.Clear()
-			dClassAndPropsByKey.Clear()
-			Startup()
+
 
 		Catch ex As Exception
 			CreateErrorMessage(ex)
@@ -227,50 +224,76 @@
 	End Sub
 
 	''' <summary>
-	''' on signout , disable all screen components (JH 1-29-19)
+	''' on signout , disable all screen components, and if there is already a logged user, call the LogoutUser sub (JH 2-13-19)
 	''' </summary>
 	Private Sub btnSignOut_Click(sender As Object, e As EventArgs) Handles btnSignOut.Click
 
 		Try
-			SetLogText(Nothing, "Logout")
-			lblUser.Text = "None is logged in."
-			LoggedUser = Nothing
-			cmbClass.Enabled = False
-			btnAddClass.Enabled = False
-			btnDeleteClass.Enabled = False
-			txtLog.Enabled = False
+			lblUser.Text = "None is logged in"
 			txtCount.Enabled = False
 			btnClearLog.Enabled = False
 			txtDelete.Enabled = False
+			btnSignIn.Enabled = True
+			btnSignOut.Enabled = False
+			txtLog.Enabled = False
+			cmbClass.Enabled = False
+			btnAddClass.Enabled = False
+			btnDeleteClass.Enabled = False
 			dgClasses.Enabled = False
 			dgClassProps.Enabled = False
-			btnSignIn.Enabled = True
+
+			If Not IsNothing(LoggedUser) Then
+				LogoutUser()
+			End If
+
+
 		Catch ex As Exception
 			CreateErrorMessage(ex)
 		End Try
 
 	End Sub
+	''' <summary>
+	''' Sub handles stopping and removing the handler from the inactivity timer, updates the text log (JH 2-13-19)
+	''' </summary>
+	Sub LogoutUser()
+		AppTimer.Stop()
+		RemoveHandler AppTimer.Elapsed, AddressOf TrackUserInactivityTime
+		SetLogText(Nothing, "Logout")
+		LoggedUser = Nothing
+	End Sub
 
-	Private Sub ShowErrorForm()
+
+	''' <summary>
+	''' Sub handles setting the text log and starting the inactivity timer (JH 2-13-19)
+	''' </summary>
+	Sub LoginUser()
+		lblUser.Text = LoggedUser.FirstName + " " + LoggedUser.LastName + " is logged in"
+		SetLogText(Nothing, "Login")
+		TimerInit()
+	End Sub
+
+	''' <summary>
+	''' Sub handles creating a new windows form to popup (JH 2-13-19)
+	''' </summary>
+	''' <param name="msg">The string that will appear in the popup</param>
+	Private Sub ShowErrorForm(msg As String)
 
 		Dim label As New Label()
 		Dim errorForm As New Form()
 
 		label.AutoSize = False
 		label.Width = errorForm.Width
-		label.Font = txtDelete.Font
-
-		label.Text = "Incorrect login or password entry."
+		label.Text = msg
 		label.Location = New Point(errorForm.Left + 30, errorForm.Top + 20)
 
+		errorForm.StartPosition = FormStartPosition.CenterParent
 		errorForm.Controls.Add(label)
 		errorForm.Text = "Error"
 		errorForm.Width = 250
 		errorForm.Height = 100
-		errorForm.Show()
+		errorForm.ShowDialog()
 
 	End Sub
-
 
 	''' <summary>
 	''' Checks if values exist in the username and password textboxes, then if so, pass the 
@@ -284,24 +307,22 @@
 				Dim isLogged = ClientLoginRequest(txtUserName.Text, txtPassword.Text)
 
 				If isLogged Then
-
-					lblUser.Text = LoggedUser.FirstName + " " + LoggedUser.LastName + " is logged in."
+					txtLog.Enabled = True
 					txtUserName.Text = ""
 					txtPassword.Text = ""
-					cmbClass.Enabled = True
-					btnAddClass.Enabled = True
-					btnDeleteClass.Enabled = True
-					txtLog.Enabled = True
 					txtCount.Enabled = True
 					btnClearLog.Enabled = True
 					txtDelete.Enabled = True
+					btnSignOut.Enabled = True
+					btnSignIn.Enabled = False
+					cmbClass.Enabled = True
+					btnAddClass.Enabled = True
+					btnDeleteClass.Enabled = True
 					dgClasses.Enabled = True
 					dgClassProps.Enabled = True
-					btnSignIn.Enabled = False
-					SetLogText(Nothing, "Login")
-
+					LoginUser()
 				Else
-					ShowErrorForm()
+					ShowErrorForm("Incorrect login or password entry.")
 				End If
 
 			End If
@@ -309,6 +330,67 @@
 			CreateErrorMessage(ex)
 		End Try
 
+	End Sub
+
+	''' <summary>
+	''' Initializes the inactivity timer set to an interval from the user db property (JH 2-13-19)
+	''' </summary>
+	Sub TimerInit()
+		If btnSignIn.Enabled = False Then
+			AppTimer.Interval = LoggedUser.ActivityTimeout * 1000
+			AppTimer.AutoReset = False
+			AppTimer.Enabled = True
+			TimerCounter = 0
+			AddHandler AppTimer.Elapsed, AddressOf TrackUserInactivityTime
+		End If
+	End Sub
+
+	''' <summary>
+	''' Handles what happens once user inactivity reaches the timer interval.  Once timeout is reached user is logged out (JH 2-13-19)
+	''' </summary>
+	Sub TrackUserInactivityTime(sender As Object, e As ElapsedEventArgs)
+
+		TimerCounter += 1
+
+		If TimerCounter >= 1 Then
+			AppTimer.Enabled = False
+			ShowErrorForm("Logged out due to inactivity")
+			btnSignOut.Invoke(New MethodInvoker(AddressOf btnSignOut.PerformClick))
+		End If
+
+	End Sub
+
+	''' <summary>
+	''' Handles mouse leaving the app screen, resets the activity timer (JH 2-13-19)
+	''' </summary>
+	Private Sub Container_MouseLeave(sender As Object, e As EventArgs) Handles MyBase.MouseLeave
+		If btnSignIn.Enabled = False Then
+			AppTimer.Stop()
+			AppTimer.Start()
+			TimerCounter = 0
+		End If
+	End Sub
+
+	''' <summary>
+	''' Handles the mouse entering the screen, resets the activity timer (JH 2-13-19)
+	''' </summary>
+	Private Sub Container_MouseEnter(sender As Object, e As EventArgs) Handles MyBase.MouseEnter
+		If btnSignIn.Enabled = False Then
+			AppTimer.Stop()
+			AppTimer.Start()
+			TimerCounter = 0
+		End If
+	End Sub
+
+	''' <summary>
+	''' Handles mouse click events, on click reset the activity timer (JH 2-13-19)
+	''' </summary>
+	Private Sub container_mouseclick(sender As Object, e As EventArgs) Handles MyBase.MouseClick
+		If btnSignIn.Enabled = False Then
+			AppTimer.Stop()
+			AppTimer.Start()
+			TimerCounter = 0
+		End If
 	End Sub
 
 	''' <summary>
@@ -351,7 +433,7 @@
 	Private Sub dgClasses_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgClasses.CellClick
 
 		If sender.selectedCells(0).value Then
-			CreateDgClassProps(sender.selectedCells(0).value)
+			InitDtClassPropsColsAndRows(sender.selectedCells(0).value)
 			dgClassProps.DataSource = dtClassProps
 			txtDelete.Text = sender.selectedCells(1).value
 		End If
@@ -382,6 +464,5 @@
 		End If
 
 	End Sub
-
 
 End Class

@@ -1,9 +1,9 @@
 ﻿Public Class clsClassProp
 
-	Property Name As String ' holds name of the property (JH 2-4-19)
-	Property ArrayIndex As Integer ' holds array index of the property (JH 2-4-19)
-	Property ParentKey As Integer ' holds the parentKey of the property(JH 2-4-19)
-	Property Key As Integer ' holds the key of the property (JH 2-4-19)
+	Property name As String ' holds name of the property (JH 2-4-19)
+	Property arrayIndex As Integer ' holds array index of the property (JH 2-4-19)
+	Property parentKey As Integer ' holds the parentKey of the property(JH 2-4-19)
+	Property key As Integer ' holds the key of the property (JH 2-4-19)
 
 	Sub New()
 
@@ -18,16 +18,16 @@
 	Sub New(name As String, arrayIndex As Integer, parentKey As ULong, Optional key As ULong = Nothing)
 
 		ClassAndPropsKeyIndex += 1
-		Me.Name = name
-		Me.ArrayIndex = arrayIndex
-		Me.ParentKey = parentKey
+		Me.name = name
+		Me.arrayIndex = arrayIndex
+		Me.parentKey = parentKey
 		If key Then
-			Me.Key = key
+			Me.key = key
 		Else
-			Me.Key = ClassAndPropsKeyIndex
+			Me.key = ClassAndPropsKeyIndex
 		End If
-		dClassAndPropsByKey(Me.ParentKey).props.Insert(Me.ArrayIndex, Me.Name, Me)
-		dClassAndPropsByKey.Add(Me.Key, Me)
+		dClassAndPropsByKey(Me.parentKey).props.Insert(Me.arrayIndex, Me.name, Me)
+		dClassAndPropsByKey.Add(Me.key, Me)
 
 
 	End Sub
@@ -36,7 +36,14 @@
 	''' Removes this object from dclassAndPropsByKey (JH 2-4-19)
 	''' </summary>
 	Sub Remove()
-		dClassAndPropsByKey.Remove(Key)
+		dClasses(dClassAndPropsByKey(parentKey).name).props.RemoveAt(arrayIndex)
+		'dClassAndPropsByKey(parentKey).props.RemoveAt(arrayIndex)
+
+		If dClassAndPropsByKey.Count > 0 Then
+			ReIndexDtClassPropsColumns(parentKey)
+		End If
+		dClassAndPropsByKey.Remove(key)
+
 	End Sub
 
 End Class

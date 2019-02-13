@@ -177,6 +177,7 @@ Partial Class Container
 		Me.txtLog.MinimumSize = New System.Drawing.Size(700, 300)
 		Me.txtLog.Multiline = True
 		Me.txtLog.Name = "txtLog"
+		Me.txtLog.ReadOnly = True
 		Me.txtLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
 		Me.txtLog.Size = New System.Drawing.Size(750, 336)
 		Me.txtLog.TabIndex = 6
@@ -356,11 +357,13 @@ Partial Class Container
 		'
 		'lblUser
 		'
+		Me.lblUser.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
 		Me.lblUser.Font = New System.Drawing.Font("Arial", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 		Me.lblUser.ForeColor = System.Drawing.SystemColors.MenuHighlight
-		Me.lblUser.Location = New System.Drawing.Point(866, 9)
+		Me.lblUser.Location = New System.Drawing.Point(797, 9)
 		Me.lblUser.Name = "lblUser"
-		Me.lblUser.Size = New System.Drawing.Size(109, 23)
+		Me.lblUser.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+		Me.lblUser.Size = New System.Drawing.Size(178, 23)
 		Me.lblUser.TabIndex = 14
 		Me.lblUser.Text = "None is logged in"
 		'
@@ -392,6 +395,7 @@ Partial Class Container
 		Me.Controls.Add(Me.Label3)
 		Me.Controls.Add(Me.txtLog)
 		Me.Controls.Add(Me.Panel1)
+		Me.ForeColor = System.Drawing.SystemColors.ControlText
 		Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D
 		Me.MinimumSize = New System.Drawing.Size(700, 500)
 		Me.Name = "Container"

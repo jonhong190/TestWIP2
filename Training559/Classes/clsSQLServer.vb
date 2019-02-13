@@ -70,9 +70,7 @@ Public Class clsSQLServer
 			For i As Integer = 0 To ParamValues.Length - 1
 				Dim param As New SqlParameter(paramName(i).ToString, ParamValues(i))
 				Command.Parameters.Add(param)
-				Console.WriteLine(ParamValues(i).GetType.Name)
 			Next
-
 
 		End If
 

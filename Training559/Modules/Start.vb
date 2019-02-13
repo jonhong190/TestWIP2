@@ -1,4 +1,5 @@
 ﻿Imports System.Collections.Specialized
+Imports System.Timers
 
 Module Start
 
@@ -14,18 +15,18 @@ Module Start
 	Public paramName As New Object() '* global array to hold parameter names when passing values to the DB stored procedures (JH 2-6-19)
 	Public SqlServerObj As clsSQLServer '** holds the clsSQLServer class object (JH 2-6-19)
 	Public dUsers As Dictionary(Of String, clsUser) = New Dictionary(Of String, clsUser) '** dictionary to hold users (JH 2-12-19)
-	Public LoggedUser As clsUser '** holds the current logged in use (JH 2-12-19)
-
-
+	Public LoggedUser As clsUser = Nothing '** holds the current logged in use (JH 2-12-19)
+	Public AppTimer As New Timer() ' ** holds the timer used to monitor inactivity in the app (JH 2-12-19)
+	Public TimerCounter As Integer ' ** used to indicate when a timer interval is reached (JH 2-13-19)
 
 
 	''' <summary>
-	''' Routine instanstiates new clsSQLServer class object then calls 
+	''' Routine instanstiates new clsSQLServer class object, initializes the screen table columns, then calls 
 	''' LoadClassesFromDatabase sub (JH 2-12-19)
 	''' </summary>
 	Sub Startup()
 		SqlServerObj = New clsSQLServer()
-		CreateDgClasses()
+		InitDtClassesColumns()
 		LoadClassesFromDatabase(SqlServerObj)
 		GetAllDbTableAndCols(SqlServerObj)
 	End Sub
@@ -91,8 +92,7 @@ Module Start
 	''' <returns>Returns the index of the name, or an error message if not found</returns>
 	Function IndexByName(Name As String) As Integer
 
-		Dim a As OrderedDictionary
-		a = New OrderedDictionary
+		Dim a As New OrderedDictionary
 
 		Try
 			If dClasses.Contains(Name) Then
@@ -113,12 +113,20 @@ Module Start
 	''' handles updating index values after a delete.  Goes through the selected dictionary and makes each index value arrayIndex 
 	''' incremented from 0 (JH 2-4-19)
 	''' </summary>
-	Sub UpdateIndex()
+	Sub UpdateIndex(dictName As String)
 
 		Try
-			For i As Integer = 1 To dClasses.Count
-				dClasses(i).arrayIndex = i
-			Next
+			If dictName = "dClasses" Then
+				For i As Integer = 0 To dClasses.Count - 1
+					dClasses(i).arrayIndex = i
+
+				Next
+			Else
+
+
+			End If
+
+
 		Catch ex As Exception
 			Console.WriteLine(ex.GetType.ToString + " Error: " + ex.Message)
 		End Try
@@ -137,6 +145,7 @@ Module Start
 
 			If dUsers.ContainsKey(Username) Then
 				If dUsers(Username).Password = Password Then
+
 					Dim formatDateStr = GetCurrentDateAndTime().Substring(1, GetCurrentDateAndTime().LastIndexOf(" "))
 
 					LoggedUser = dUsers(Username)
@@ -144,6 +153,7 @@ Module Start
 
 					SelectDBProcedure(, LoggedUser)
 					Return True
+
 				End If
 			End If
 
@@ -154,7 +164,6 @@ Module Start
 			Return False
 		End Try
 
-
 	End Function
 
 	''' <summary>
@@ -162,19 +171,26 @@ Module Start
 	''' </summary>
 	''' <param name="clsObj"></param>
 	Sub CreateDtRows(clsObj As Object)
+		Try
 
-		Dim row = dtClasses.NewRow()
-		row("Key") = clsObj.Value("ClassID")
-		row("ClassName") = clsObj.Value("ClassName")
-		row("ArrayIndex") = clsObj.Value("ArrayIndex")
-		dtClasses.Rows.Add(row)
+			Dim row = dtClasses.NewRow()
+
+			row("Key") = clsObj.Value("ClassID")
+			row("ClassName") = clsObj.Value("ClassName")
+			row("ArrayIndex") = clsObj.Value("ArrayIndex")
+			dtClasses.Rows.Add(row)
+
+		Catch ex As Exception
+			Console.WriteLine(ex.Message)
+		End Try
+
 
 	End Sub
 
 	''' <summary>
 	''' Handles creating inital columns for DtClasses, rows are added as the DB query fills dClasses and dclassAndPropsByKey dictionaries (JH 2-7-19)
 	''' </summary>
-	Sub CreateDgClasses()
+	Sub InitDtClassesColumns()
 
 		Dim colHeadersArray As String() = New String() {"Key", "ClassName", "ArrayIndex"}
 		dtClasses = New DataTable("Classes")
@@ -194,10 +210,10 @@ Module Start
 	''' <summary>
 	''' Function handles replacing the screen table rows after a class is deleted(JH 2-11-19)
 	''' </summary>
-	Sub ReplaceDtClassRows()
+	Sub ReIndexDtClassesColumns()
 
 		dtClasses.Clear()
-		CreateDgClasses()
+		InitDtClassesColumns()
 
 		For Each item In dClasses
 
@@ -210,17 +226,38 @@ Module Start
 		Next
 
 	End Sub
+
+	''' <summary>
+	''' Sub handles re indexes array index of screen props table
+	''' </summary>
+	''' <param name="key"></param>
+	Sub ReIndexDtClassPropsColumns(key As Integer)
+
+		dtClassProps.Rows.Clear()
+		Dim count = 0
+		For i As Integer = 0 To dClassAndPropsByKey(key).props.count - 1
+			Dim item = dClassAndPropsByKey(key).props(i)
+			Dim row As DataRow
+			row = dtClassProps.NewRow()
+			row("Key") = item.key
+			row("PropName") = item.name
+			row("ArrayIndex") = count
+			dtClassProps.Rows.Add(row)
+			item.arrayindex = count
+			count += 1
+		Next
+
+	End Sub
 	''' <summary>
 	''' Handles creating the dgClassProps table (JH 2-7-19)
 	''' </summary>
 	''' <param name="key">key of element</param>
-	Sub CreateDgClassProps(key As Integer)
+	Sub InitDtClassPropsColsAndRows(key As Integer)
 
 		Dim colHeadersArray As String() = New String() {"Key", "PropName", "ArrayIndex"}
 		dtClassProps = New DataTable("ClassProps")
 
 		For i As Integer = 0 To colHeadersArray.Length - 1
-
 			Dim col As DataColumn = New DataColumn()
 			col.ColumnName = colHeadersArray(i)
 			col.ReadOnly = True
@@ -230,14 +267,12 @@ Module Start
 		Next
 
 		For Each item In dClassAndPropsByKey(key).props
-
 			Dim row As DataRow
 			row = dtClassProps.NewRow()
 			row("Key") = item.Value.key
 			row("PropName") = item.Value.name
 			row("ArrayIndex") = item.Value.arrayIndex
 			dtClassProps.Rows.Add(row)
-
 		Next
 
 	End Sub
