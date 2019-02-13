@@ -2,8 +2,8 @@
 
 Module Start
 
-	Public defaultTxt As String = "--Server Log Loaded--" ' ** default text for the server text box (JH 1-28-19)
-	Public ClassAndPropsKeyIndex As UInteger = 0 ' ** holds the current class count (JH 1-29-19)
+    Public defaultTxt As String = "--Server Log UNLoaded  --" ' ** default text for the server text box (JH 1-28-19)
+    Public ClassAndPropsKeyIndex As UInteger = 0 ' ** holds the current class count (JH 1-29-19)
 	Public selectedClass As String '** holds the currently seleted class from the drop down (JH 1-28-19)
 	Public dClasses As OrderedDictionary = New OrderedDictionary '** dictionary to hold all the clsclass objs (JH 2-4-19)
 	Public dClassAndPropsByKey As Dictionary(Of ULong, Object) = New Dictionary(Of ULong, Object) '** dictionary to hold all clsclass and clsclassProp objs (JH 2-4-19)
