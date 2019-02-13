@@ -61,10 +61,10 @@ Public Class Container
 	End Sub
 
 	''' <summary>
-	''' Handles adding a row to dtClasses after the inital database load (JH 2-7-19)
+	''' Handles adding a row to class screen table after the inital database load (JH 2-7-19)
 	''' </summary>
 	''' <param name="clsClass">cls Class object to get row values from</param>
-	Public Sub AddClassAndPropRows(clsClass As clsClass)
+	Public Sub AddDtClassRow(clsClass As clsClass)
 
 		Try
 
@@ -92,7 +92,7 @@ Public Class Container
 		Try
 			Dim clsObj = New clsClass(, ,)
 			SelectDBProcedure("Add", clsObj)
-			AddClassAndPropRows(clsObj)
+			AddDtClassRow(clsObj)
 
 			Dim clsClassProp1 = New clsClassProp("Name", 0, clsObj.Key)
 			SelectDBProcedure("Add", clsClassProp1)

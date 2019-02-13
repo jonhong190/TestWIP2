@@ -36,8 +36,8 @@
 	''' Removes this object from dclassAndPropsByKey (JH 2-4-19)
 	''' </summary>
 	Sub Remove()
+
 		dClasses(dClassAndPropsByKey(parentKey).name).props.RemoveAt(arrayIndex)
-		'dClassAndPropsByKey(parentKey).props.RemoveAt(arrayIndex)
 
 		If dClassAndPropsByKey.Count > 0 Then
 			ReIndexDtClassPropsColumns(parentKey)
