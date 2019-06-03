@@ -35,7 +35,7 @@ Public Class clsClass
 		End If
 
 		Props = New OrderedDictionary
-		dClasses.Insert(Me.ArrayIndex, Me.Name, Me)
+		dClasses.Insert(Me.ArrayIndex, Me, Me)
 		dClassAndPropsByKey.Add(Me.Key, Me)
 
 	End Sub
