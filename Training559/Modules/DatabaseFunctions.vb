@@ -75,7 +75,6 @@ Module DatabaseFunctions
 
 						addParams = New Object() {obj.Key, obj.Name, obj.ArrayIndex}
 						paramName = New Object() {"@ClassID", "@ClassName", "@ArrayIndex"}
-
 						SqlServerObj.ExecSqlStoredProc("AddClass", addParams)
 
 					ElseIf procType = "Delete" Then
