@@ -68,7 +68,7 @@ Module DatabaseFunctions
 			Dim addParams As Object()
 
 			If Not obj Is Nothing Then
-
+				Console.WriteLine("hi")
 				If TypeOf obj Is clsClass Then
 
 					If procType = "Add" Then
@@ -133,6 +133,10 @@ Module DatabaseFunctions
 			SqlServerObj.ExecSqlStoredProc("StoreClassPropsInXml", addParams)
 			Stream.Flush()
 			Stream.Seek(0, SeekOrigin.Begin)
+			Console.WriteLine("hi")
+			Console.WriteLine("hi")
+			Console.WriteLine("hi")
+
 
 		Catch ex As Exception
 			Console.WriteLine(ex.Message)
@@ -172,7 +176,7 @@ JOIN INFORMATION_SCHEMA.COLUMNS ON INFORMATION_SCHEMA.COLUMNS.TABLE_NAME = INFOR
 
 			DatabaseInfo = SqlServerObj.GetSqlData(sqlString)
 			Return DatabaseInfo
-
+			Console.WriteLine("hi")
 		Catch ex As Exception
 			Console.WriteLine(ex)
 			Return Nothing
